@@ -1,7 +1,7 @@
 package model
 
 type CardDetails struct {
-	ID     string `sql:"card_id" json:"cardId"`
+	ID     string `sql:"card_id" json:"cardID"`
 	Name   string `sql:"name" json:"cardName"`
 	Secret string `sql:"secret"`
 }

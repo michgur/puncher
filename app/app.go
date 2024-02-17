@@ -9,23 +9,7 @@ import (
 	"github.com/michgur/puncher/app/db"
 	"github.com/michgur/puncher/app/model"
 	"github.com/michgur/puncher/app/otp"
-	"github.com/pquerna/otp/totp"
 )
-
-// generate a TOTP for a client to redeem their slot punch
-// use the business id to generate the TOTP
-func generateTOTPSecret(businessID string) (secret string) {
-	otp, err := totp.Generate(totp.GenerateOpts{
-		Issuer:      businessID,
-		AccountName: "client",
-	})
-	if err != nil {
-		panic(err)
-	}
-	return otp.Secret()
-}
-
-var businessIdToSecret = map[string]string{}
 
 func Main() {
 	/*
@@ -33,10 +17,6 @@ func Main() {
 		- Physical transactions: business generates an OTP & physically displays it to the client, client enters it
 		- Online transactions: business generates a redeem-link, figure out how to make it secure
 	*/
-
-	for _, bid := range []string{"1", "2", "3"} {
-		businessIdToSecret["business"+bid] = generateTOTPSecret(bid)
-	}
 
 	r := gin.Default()
 
@@ -72,27 +52,6 @@ func Main() {
 			})
 		})
 
-		api.GET("/generate/:business-id", func(c *gin.Context) {
-			businessID := c.Param("business-id")
-			if secret, ok := businessIdToSecret[businessID]; ok {
-				otp, err := otp.GenerateOTP(businessID, secret)
-				if err != nil {
-					c.JSON(500, gin.H{
-						"message": "error generating otp",
-					})
-					return
-				}
-				c.JSON(200, gin.H{
-					"message": "generate3",
-					"otp":     otp,
-				})
-			} else {
-				c.JSON(404, gin.H{
-					"message": "business not found",
-				})
-			}
-		})
-
 		api.GET("/cards", func(c *gin.Context) {
 			cards, err := db.GetAllCardInstances()
 			if err != nil {
@@ -107,7 +66,7 @@ func Main() {
 		})
 
 		type EnrollBody struct {
-			CardID string `json:"cardId"`
+			CardID string `json:"cardID"`
 		}
 		api.POST("/enroll", func(c *gin.Context) {
 			var card EnrollBody
@@ -135,47 +94,53 @@ func Main() {
 	}
 
 	r.LoadHTMLGlob("templates/*")
-	r.GET("/punch/:business-id", func(c *gin.Context) {
-		businessID := c.Param("business-id")
-		if secret, ok := businessIdToSecret[businessID]; ok {
-			otp, err := otp.GenerateOTP(businessID, secret)
-			if err != nil {
-				c.JSON(500, gin.H{
-					"message": "failed to generate OTP",
-				})
-				fmt.Println(err)
-				return
-			}
-			c.HTML(200, "index.html", gin.H{
-				"otp":        otp,
-				"businessId": businessID,
-				"eightTimes": [8]struct{}{},
-			})
-		} else {
+	r.GET("/punch/:card-id", func(c *gin.Context) {
+		cardID := c.Param("card-id")
+		cardDetails, err := db.GetCardDetails(cardID)
+		if err != nil {
 			c.JSON(404, gin.H{
-				"message": "business not found",
+				"message": "card not found",
 			})
+			fmt.Println(err)
+			return
 		}
+
+		otp, err := otp.GenerateOTP(cardID, cardDetails.Secret)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": "failed to generate OTP",
+			})
+			fmt.Println(err)
+			return
+		}
+		c.HTML(200, "index.html", gin.H{
+			"otp":        otp,
+			"cardID":     cardID,
+			"eightTimes": [8]struct{}{},
+		})
 	})
 
-	r.GET("/validate/:business-id/:otp", func(c *gin.Context) {
+	r.GET("/validate/:card-id/:otp", func(c *gin.Context) {
 		time.Sleep(2 * time.Second)
 
-		businessID := c.Param("business-id")
 		enteredOtp := c.Param("otp")
-		if secret, ok := businessIdToSecret[businessID]; ok {
-			valid := otp.ValidateOTP(businessID, secret, enteredOtp)
-			if valid {
-				c.HTML(200, "otpInputSuccess.html", gin.H{})
-			} else {
-				c.HTML(200, "otpInputFail.html", gin.H{
-					"value":      enteredOtp,
-					"businessId": businessID,
-				})
-			}
-		} else {
+		cardID := c.Param("card-id")
+		cardDetails, err := db.GetCardDetails(cardID)
+		if err != nil {
 			c.JSON(404, gin.H{
-				"message": "business not found",
+				"message": "card not found",
+			})
+			fmt.Println(err)
+			return
+		}
+
+		valid := otp.ValidateOTP(cardID, cardDetails.Secret, enteredOtp)
+		if valid {
+			c.HTML(200, "otpInputSuccess.html", gin.H{})
+		} else {
+			c.HTML(200, "otpInputFail.html", gin.H{
+				"value":  enteredOtp,
+				"cardID": cardID,
 			})
 		}
 	})
