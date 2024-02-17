@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/michgur/puncher/app/db"
 	"github.com/michgur/puncher/app/model"
+	"github.com/michgur/puncher/app/otp"
 	"github.com/pquerna/otp/totp"
 )
 
@@ -22,27 +23,6 @@ func generateTOTPSecret(businessID string) (secret string) {
 		panic(err)
 	}
 	return otp.Secret()
-}
-
-var validateOpts = totp.ValidateOpts{
-	Period: 30,
-	Digits: 4,
-}
-
-func generateOTP(secret string) (otp string) {
-	otp, err := totp.GenerateCodeCustom(secret, time.Now(), validateOpts)
-	if err != nil {
-		panic(err)
-	}
-	return otp
-}
-
-func validateOTP(secret, otp string) (valid bool) {
-	valid, err := totp.ValidateCustom(otp, secret, time.Now(), validateOpts)
-	if err != nil {
-		valid = false
-	}
-	return valid
 }
 
 var businessIdToSecret = map[string]string{}
@@ -74,7 +54,13 @@ func Main() {
 		api.GET("/generate/:business-id", func(c *gin.Context) {
 			businessID := c.Param("business-id")
 			if secret, ok := businessIdToSecret[businessID]; ok {
-				otp := generateOTP(secret)
+				otp, err := otp.GenerateOTP(businessID, secret)
+				if err != nil {
+					c.JSON(500, gin.H{
+						"message": "error generating otp",
+					})
+					return
+				}
 				c.JSON(200, gin.H{
 					"message": "generate3",
 					"otp":     otp,
@@ -132,7 +118,12 @@ func Main() {
 	r.GET("/punch/:business-id", func(c *gin.Context) {
 		businessID := c.Param("business-id")
 		if secret, ok := businessIdToSecret[businessID]; ok {
-			otp := generateOTP(secret)
+			otp, err := otp.GenerateOTP(businessID, secret)
+			if err != nil {
+				c.JSON(500, gin.H{
+					"message": "failed to generate OTP",
+				})
+			}
 			c.HTML(200, "index.html", gin.H{
 				"otp":        otp,
 				"businessId": businessID,
@@ -149,14 +140,14 @@ func Main() {
 		time.Sleep(2 * time.Second)
 
 		businessID := c.Param("business-id")
-		otp := c.Param("otp")
+		enteredOtp := c.Param("otp")
 		if secret, ok := businessIdToSecret[businessID]; ok {
-			valid := validateOTP(secret, otp)
+			valid := otp.ValidateOTP(businessID, secret, enteredOtp)
 			if valid {
 				c.HTML(200, "otpInputSuccess.html", gin.H{})
 			} else {
 				c.HTML(200, "otpInputFail.html", gin.H{
-					"value":      otp,
+					"value":      enteredOtp,
 					"businessId": businessID,
 				})
 			}

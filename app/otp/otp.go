@@ -16,42 +16,37 @@ func GenerateOTP(cardID string, cardSecret string) (otp string, err error) {
 	// generate a unique transaction key
 	key, err := AddTransaction(cardID)
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	// generate the OTP using the card's secret and the unique transaction ID
 	secret := cardSecret + fmt.Sprint(key.TransactionID)
 	otp, err = totp.GenerateCodeCustom(secret, time.Now(), validateOpts)
 	if err != nil {
-		panic(err)
+		return
 	}
 	return
 }
 
-func ValidateOTP(cardID string, cardSecret string, otp string) (valid bool, err error) {
+func ValidateOTP(cardID string, cardSecret string, otp string) bool {
 	// get all transaction keys for the card
 	keys, err := GetTransactions(cardID)
 	if err != nil {
-		panic(err)
+		return false
 	}
 
 	// validate the OTP using the card's secret and the unique transaction ID
 	for _, key := range keys {
 		secret := cardSecret + fmt.Sprint(key.TransactionID)
-		valid, err = totp.ValidateCustom(otp, secret, time.Now(), validateOpts)
-		if err != nil {
-			valid = false
-		}
-		if valid {
+		valid, err := totp.ValidateCustom(otp, secret, time.Now(), validateOpts)
+		if err == nil && valid {
 			// asynchonously remove the transaction key
 			go func() {
 				err = RemoveTransaction(key)
-				if err != nil {
-					panic(err)
-				}
+				// handle error
 			}()
-			return
+			return true
 		}
 	}
-	return
+	return false
 }
