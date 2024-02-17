@@ -20,7 +20,7 @@ type TransactionKey struct {
 
 func init() {
 	// create the table
-	_, err := db.Exec("create-otp-cache.sql")
+	_, err := db.Exec("otp-cache-create.sql")
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +28,7 @@ func init() {
 
 func AddTransaction(cardID string) (TransactionKey, error) {
 	unixTime := time.Now().Unix()
-	res, err := db.Exec("insert-otp-cache.sql", cardID, unixTime)
+	res, err := db.Exec("otp-cache-insert.sql", cardID, unixTime)
 	if err != nil {
 		return TransactionKey{}, err
 	}
@@ -40,7 +40,7 @@ func AddTransaction(cardID string) (TransactionKey, error) {
 }
 
 func GetTransactions(cardID string) ([]TransactionKey, error) {
-	rows, err := db.Query("select-otp-cache.sql", cardID)
+	rows, err := db.Query("otp-cache-select.sql", cardID)
 	if err != nil {
 		return nil, err
 	}
@@ -57,6 +57,6 @@ func GetTransactions(cardID string) ([]TransactionKey, error) {
 }
 
 func RemoveTransaction(key TransactionKey) error {
-	_, err := db.Exec("delete-otp-cache.sql", key.TransactionID)
+	_, err := db.Exec("otp-cache-delete.sql", key.TransactionID)
 	return err
 }

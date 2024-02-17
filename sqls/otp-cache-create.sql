@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS OTPCache (
-    transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    transaction_id INTEGER PRIMARY KEY,
     card_id VARCHAR NOT NULL,
     unix_time INTEGER NOT NULL
 );

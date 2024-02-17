@@ -44,7 +44,7 @@ func init() {
 	}
 
 	// Create CardInstances table
-	_, err = db.Exec(sqls["create-card-instances.sql"])
+	_, err = db.Exec(sqls["card-instances-create.sql"])
 	if err != nil {
 		fmt.Println("Error creating table:", err)
 		return
@@ -52,7 +52,7 @@ func init() {
 }
 
 func GetAllCardInstances() (cardInstances []model.CardInstance, err error) {
-	rows, err := db.Query(sqls["select-all-card-instances.sql"])
+	rows, err := db.Query(sqls["card-instances-select-all.sql"])
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func GetAllCardInstances() (cardInstances []model.CardInstance, err error) {
 }
 
 func InsertCardInstance(cardInstance model.CardInstance) error {
-	_, err := db.Exec(sqls["insert-card-instance.sql"], cardInstance.CardID, cardInstance.Slots)
+	_, err := db.Exec(sqls["card-instance-insert.sql"], cardInstance.CardID, cardInstance.Slots)
 	return err
 }
 
