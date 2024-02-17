@@ -116,6 +116,7 @@ func Main() {
 		c.HTML(200, "index.html", gin.H{
 			"otp":        otp,
 			"cardID":     cardID,
+			"cardName":   cardDetails.Name,
 			"eightTimes": [8]struct{}{},
 		})
 	})

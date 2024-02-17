@@ -1,0 +1,1 @@
+SELECT * FROM CardDetails WHERE card_id = ?;

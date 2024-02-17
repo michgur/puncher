@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, World!</title>
+    <title>{{ .cardName }}</title>
     <script src="/static/htmx.min.js"></script>
     <link href="/static/app.css" rel="stylesheet">
 
@@ -12,7 +12,7 @@
 
 <body class="bg-gray-300">
     <header class="p-2">
-        <h1 class="text-5xl text-gray-700 font-semibold">Hi There</h1>
+        <h1 class="text-5xl text-gray-700 font-semibold">{{ .cardName }}</h1>
         <p>Enter OTP: <i class="text-gray-500">(hint - it's {{ .otp }})</i>.</p>
     </header>
 
