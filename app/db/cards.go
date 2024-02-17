@@ -5,6 +5,12 @@ import (
 	"github.com/pquerna/otp/totp"
 )
 
+func init() {
+	if _, err := Exec("card-details-create.sql"); err != nil {
+		panic(err)
+	}
+}
+
 func generateCardSecret(details model.CardDetails) (string, error) {
 	otp, err := totp.Generate(totp.GenerateOpts{
 		Issuer:      details.ID,
@@ -25,12 +31,12 @@ func NewCard(details model.CardDetails) error {
 		details.Secret = secret
 	}
 
-	_, err := Exec("card-insert.sql", details.ID, details.Name, details.Secret)
+	_, err := Exec("card-details-insert.sql", details.ID, details.Name, details.Secret)
 	return err
 }
 
 func GetCardDetails(cardID string) (model.CardDetails, error) {
 	var details model.CardDetails
-	err := QueryRow("card-select.sql", cardID).Scan(&details.ID, &details.Name, &details.Secret)
+	err := QueryRow("card-details-select.sql", cardID).Scan(&details.ID, &details.Name, &details.Secret)
 	return details, err
 }

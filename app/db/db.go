@@ -74,13 +74,22 @@ func InsertCardInstance(cardInstance model.CardInstance) error {
 
 // wrappers for db functions, using SQL files from ./sqls
 func Exec(qName string, args ...interface{}) (sql.Result, error) {
-	return db.Exec(sqls[qName], args...)
+	if query, ok := sqls[qName]; !ok {
+		return db.Exec(query, args...)
+	}
+	return nil, fmt.Errorf("query %s not found", qName)
 }
 
 func Query(qName string, args ...interface{}) (*sql.Rows, error) {
-	return db.Query(sqls[qName], args...)
+	if query, ok := sqls[qName]; !ok {
+		return db.Query(query, args...)
+	}
+	return nil, fmt.Errorf("query %s not found", qName)
 }
 
 func QueryRow(qName string, args ...interface{}) *sql.Row {
-	return db.QueryRow(sqls[qName], args...)
+	if query, ok := sqls[qName]; !ok {
+		return db.QueryRow(query, args...)
+	}
+	return nil
 }
