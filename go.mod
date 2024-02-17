@@ -1,4 +1,4 @@
-module michgur/puncher
+module github.com/michgur/puncher
 
 go 1.22.0
 

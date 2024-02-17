@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"database/sql"
@@ -6,6 +6,7 @@ import (
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/michgur/puncher/app/model"
 )
 
 var sqlsPath = "./sqls"
@@ -32,7 +33,7 @@ func readSQLs() error {
 	return nil
 }
 
-func getAllCardInstances() (cardInstances []CardInstance, err error) {
+func getAllCardInstances() (cardInstances []model.CardInstance, err error) {
 	rows, err := db.Query(sqls["select-all-card-instances.sql"])
 	if err != nil {
 		return nil, err
@@ -41,7 +42,7 @@ func getAllCardInstances() (cardInstances []CardInstance, err error) {
 
 	for rows.Next() {
 		println(cardInstances)
-		var ci CardInstance
+		var ci model.CardInstance
 		rows.Scan(&ci.ID, &ci.CardID, &ci.Slots)
 		cardInstances = append(cardInstances, ci)
 	}
@@ -50,7 +51,7 @@ func getAllCardInstances() (cardInstances []CardInstance, err error) {
 	return cardInstances, nil
 }
 
-func insertCardInstance(cardInstance CardInstance) error {
+func insertCardInstance(cardInstance model.CardInstance) error {
 	_, err := db.Exec(sqls["insert-card-instance.sql"], cardInstance.CardID, cardInstance.Slots)
 	return err
 }
@@ -73,9 +74,9 @@ func init() {
 	}
 }
 
-func main() {
+func Main() {
 	for i := range 4 {
-		err := insertCardInstance(CardInstance{CardID: i * 3, Slots: (i * 45480832) % 10})
+		err := insertCardInstance(model.CardInstance{CardID: i * 3, Slots: (i * 45480832) % 10})
 		if err != nil {
 			fmt.Println("Error inserting into table:", err)
 			return
