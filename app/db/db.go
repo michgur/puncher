@@ -28,6 +28,9 @@ func ReadSQLs() error {
 			return err
 		}
 		sqls[fname.Name()] = string(f)
+		println(fname.Name())
+		println(fname.Name())
+		println(fname.Name())
 	}
 
 	return nil
@@ -74,21 +77,21 @@ func InsertCardInstance(cardInstance model.CardInstance) error {
 
 // wrappers for db functions, using SQL files from ./sqls
 func Exec(qName string, args ...interface{}) (sql.Result, error) {
-	if query, ok := sqls[qName]; !ok {
+	if query, ok := sqls[qName]; ok {
 		return db.Exec(query, args...)
 	}
 	return nil, fmt.Errorf("query %s not found", qName)
 }
 
 func Query(qName string, args ...interface{}) (*sql.Rows, error) {
-	if query, ok := sqls[qName]; !ok {
+	if query, ok := sqls[qName]; ok {
 		return db.Query(query, args...)
 	}
 	return nil, fmt.Errorf("query %s not found", qName)
 }
 
 func QueryRow(qName string, args ...interface{}) *sql.Row {
-	if query, ok := sqls[qName]; !ok {
+	if query, ok := sqls[qName]; ok {
 		return db.QueryRow(query, args...)
 	}
 	return nil
