@@ -51,6 +51,27 @@ func Main() {
 
 	api := r.Group("/api")
 	{
+		api.POST("/cards/new", func(c *gin.Context) {
+			var card model.CardDetails
+			err := c.BindJSON(&card)
+			if err != nil {
+				c.JSON(400, gin.H{
+					"message": "bad request",
+				})
+				return
+			}
+			err = db.NewCard(card)
+			if err != nil {
+				c.JSON(500, gin.H{
+					"message": "failed to create card (maybe it already exists?)",
+				})
+				return
+			}
+			c.JSON(200, gin.H{
+				"message": "card created",
+			})
+		})
+
 		api.GET("/generate/:business-id", func(c *gin.Context) {
 			businessID := c.Param("business-id")
 			if secret, ok := businessIdToSecret[businessID]; ok {
@@ -161,6 +182,10 @@ func Main() {
 
 	r.GET("/enroll", func(c *gin.Context) {
 		c.HTML(200, "enroll.html", gin.H{})
+	})
+
+	r.GET("/new", func(c *gin.Context) {
+		c.HTML(200, "newCard.html", gin.H{})
 	})
 
 	r.Static("/static", "./static")

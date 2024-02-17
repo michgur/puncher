@@ -72,11 +72,15 @@ func InsertCardInstance(cardInstance model.CardInstance) error {
 	return err
 }
 
-// wrappers for db.Exec and db.Query
+// wrappers for db functions, using SQL files from ./sqls
 func Exec(qName string, args ...interface{}) (sql.Result, error) {
 	return db.Exec(sqls[qName], args...)
 }
 
 func Query(qName string, args ...interface{}) (*sql.Rows, error) {
 	return db.Query(sqls[qName], args...)
+}
+
+func QueryRow(qName string, args ...interface{}) *sql.Row {
+	return db.QueryRow(sqls[qName], args...)
 }

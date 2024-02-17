@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS CardDetails (
+    card_id VARCHAR PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    secret VARCHAR NOT NULL
+);

@@ -1,0 +1,1 @@
+INSERT INTO CardDetails (card_id, name, secret) VALUES (?, ?, ?);
