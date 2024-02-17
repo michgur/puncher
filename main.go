@@ -1,7 +1,7 @@
 package main
 
-import "github.com/michgur/puncher/db"
+import "github.com/michgur/puncher/app"
 
 func main() {
-	db.Main()
+	app.Main()
 }

@@ -3,6 +3,6 @@ DROP TABLE IF EXISTS CardInstances;
 
 CREATE TABLE CardInstances (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    card_id INTEGER NOT NULL,
+    card_id VARCHAR NOT NULL,
     slots INTEGER NOT NULL
 );

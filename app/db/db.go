@@ -13,7 +13,7 @@ var sqlsPath = "./sqls"
 var sqls = map[string]string{}
 var db *sql.DB
 
-func readSQLs() error {
+func ReadSQLs() error {
 	// iterate over ./sqls, store the contents of each file in a map
 	// key: filename, value: contents
 
@@ -33,32 +33,9 @@ func readSQLs() error {
 	return nil
 }
 
-func getAllCardInstances() (cardInstances []model.CardInstance, err error) {
-	rows, err := db.Query(sqls["select-all-card-instances.sql"])
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		println(cardInstances)
-		var ci model.CardInstance
-		rows.Scan(&ci.ID, &ci.CardID, &ci.Slots)
-		cardInstances = append(cardInstances, ci)
-	}
-	println(cardInstances)
-
-	return cardInstances, nil
-}
-
-func insertCardInstance(cardInstance model.CardInstance) error {
-	_, err := db.Exec(sqls["insert-card-instance.sql"], cardInstance.CardID, cardInstance.Slots)
-	return err
-}
-
 func init() {
 	// fetch queries
-	var err = readSQLs()
+	var err = ReadSQLs()
 	// create the database
 	db, err = sql.Open("sqlite3", "puncher.db")
 	if err != nil {
@@ -74,25 +51,32 @@ func init() {
 	}
 }
 
-func Main() {
-	for i := range 4 {
-		err := insertCardInstance(model.CardInstance{CardID: i * 3, Slots: (i * 45480832) % 10})
-		if err != nil {
-			fmt.Println("Error inserting into table:", err)
-			return
-		}
-	}
-
-	rows, err := getAllCardInstances()
+func GetAllCardInstances() (cardInstances []model.CardInstance, err error) {
+	rows, err := db.Query(sqls["select-all-card-instances.sql"])
 	if err != nil {
-		fmt.Println("Error fetching from table:", err)
-		return
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var ci model.CardInstance
+		rows.Scan(&ci.ID, &ci.CardID, &ci.Slots)
+		cardInstances = append(cardInstances, ci)
 	}
 
-	fmt.Println("CardInstances:")
-	for _, row := range rows {
-		fmt.Println(row)
-	}
+	return cardInstances, nil
+}
 
-	fmt.Println("SUCCESS!")
+func InsertCardInstance(cardInstance model.CardInstance) error {
+	_, err := db.Exec(sqls["insert-card-instance.sql"], cardInstance.CardID, cardInstance.Slots)
+	return err
+}
+
+// wrappers for db.Exec and db.Query
+func Exec(qName string, args ...interface{}) (sql.Result, error) {
+	return db.Exec(sqls[qName], args...)
+}
+
+func Query(qName string, args ...interface{}) (*sql.Rows, error) {
+	return db.Query(sqls[qName], args...)
 }

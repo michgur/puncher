@@ -2,6 +2,6 @@ package model
 
 type CardInstance struct {
 	ID     int
-	CardID int
+	CardID string
 	Slots  int
 }
