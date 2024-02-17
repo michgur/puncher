@@ -91,7 +91,6 @@ func Main() {
 		api.POST("/enroll", func(c *gin.Context) {
 			var card EnrollBody
 			err := c.BindJSON(&card)
-			fmt.Println("oh shit", c.Request.Body)
 			if err != nil {
 				c.JSON(400, gin.H{
 					"message": "bad request",
@@ -123,6 +122,8 @@ func Main() {
 				c.JSON(500, gin.H{
 					"message": "failed to generate OTP",
 				})
+				fmt.Println(err)
+				return
 			}
 			c.HTML(200, "index.html", gin.H{
 				"otp":        otp,

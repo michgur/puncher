@@ -3,5 +3,5 @@ DROP TABLE IF EXISTS OTPCache;
 CREATE TABLE OTPCache (
     transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id VARCHAR NOT NULL,
-    unix_time INTEGER NOT NULL,
+    unix_time INTEGER NOT NULL
 );
