@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html class="overflow-hidden">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Cards</title>
+    <script src="/static/htmx.min.js"></script>
+    <link href="/static/app.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 flex flex-col h-dvh w-dvw text-gray-950 overflow-hidden">
+    <header class="flex p-4 gap-10">
+        <h1 class="basis-auto grow-0 shrink-0 text-3xl text-black font-semibold">All Cards</h1>
+        <div class="flex-1 min-w-0 px-2 py-1 rounded-md bg-gray-300 flex gap-1">
+            <svg class="w-4 shrink-0 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                    fill="CurrentColor" />
+            </svg>
+            <input class="flex-1 bg-transparent outline-none placeholder:text-gray-800" type="text"
+                placeholder="Search Cards">
+        </div>
+    </header>
+
+    <div class="overflow-auto flex-1 flex flex-col gap-4 p-4 pt-0.5">
+        {{ range $i, $card := .cards }}
+        <a class="flex-1 bg-citron-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-citron-200 outline"
+            href="/punch/{{ $card.ID }}">
+            <div style="mask:url(/static/images/bubbles.svg);mask-size:cover" class="bg-citron-50 absolute inset-0">
+            </div>
+            <div class="bg-noise-dark absolute inset-0 opacity-30"></div>
+            <span class="text-3xl font-black text-citron-800 font-crimson
+                col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center">{{ $card.Name }}</span>
+            <span class="text-sm absolute bottom-2 w-full text-center text-citron-500">Buy 8 Get 1 Free</span>
+        </a>
+        {{ end }}
+    </div>
+</body>
+
+</html>

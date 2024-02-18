@@ -146,6 +146,21 @@ func Main() {
 		}
 	})
 
+	r.GET("/cards/all", func(c *gin.Context) {
+		cards, err := db.GetAllCardDetails()
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": "error fetching cards",
+			})
+			return
+		}
+		println(cards)
+		c.HTML(200, "cards.html", gin.H{
+			"cards":      cards,
+			"eightTimes": [8]struct{}{},
+		})
+	})
+
 	r.GET("/enroll", func(c *gin.Context) {
 		c.HTML(200, "enroll.html", gin.H{})
 	})

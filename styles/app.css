@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'Pacifico';
+    src: url('/static/fonts/Pacifico.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'CrimsonText';
+    src: url('/static/fonts/CrimsonText.woff2') format('woff2');
+}
+
+.font-pacifico {
+    font-family: 'Pacifico', cursive;
+}
+
+.font-crimson {
+    font-family: 'CrimsonText', serif;
+}
+
+.bg-noise-light {
+    background-image: url('/static/images/noise-light.png');
+    background-size: 50%;
+}
+
+.bg-noise-dark {
+    background-image: url('/static/images/noise-dark.png');
+    background-size: 50%;
+}
