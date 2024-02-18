@@ -1,6 +1,9 @@
 package design
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Font string
 type Color string
@@ -37,6 +40,14 @@ type CardDesign struct {
 	/* 0-100 */
 	TextureOpacity int     `json:"textureOpacity"`
 	Pattern        Pattern `json:"pattern"`
+}
+
+func (cd CardDesign) ToJSON() string {
+	b, err := json.Marshal(cd)
+	if err != nil {
+		fmt.Println("Error marshalling card design:", err)
+	}
+	return string(b)
 }
 
 func DefaultCardDesign() CardDesign {

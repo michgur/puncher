@@ -1,0 +1,1 @@
+UPDATE CardDetails SET design = ? WHERE card_id = ?;

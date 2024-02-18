@@ -75,3 +75,9 @@ func GetAllCardDetails() ([]model.CardDetails, error) {
 
 	return details, nil
 }
+
+func SetCardDesign(cardID string, design design.CardDesign) error {
+	designJSON := design.ToJSON()
+	_, err := Exec("card-details-update-design.sql", designJSON, cardID)
+	return err
+}

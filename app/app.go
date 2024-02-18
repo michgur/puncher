@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/michgur/puncher/app/db"
+	"github.com/michgur/puncher/app/design"
 	"github.com/michgur/puncher/app/model"
 	"github.com/michgur/puncher/app/otp"
 )
@@ -42,6 +43,41 @@ func Main() {
 			}
 			err = db.NewCard(card)
 			if err != nil {
+				c.JSON(500, gin.H{
+					"message": "failed to create card (maybe it already exists?)",
+				})
+				return
+			}
+			c.JSON(200, gin.H{
+				"message": "card created",
+			})
+		})
+
+		type CustomizeBody struct {
+			CardID string `json:"cardID"`
+			Design string `json:"design"`
+		}
+		api.POST("/cards/customize", func(c *gin.Context) {
+			var body CustomizeBody
+			err := c.BindJSON(&body)
+			if err != nil {
+				fmt.Println(err)
+				c.JSON(400, gin.H{
+					"message": "bad request",
+				})
+				return
+			}
+			cd, err := design.ParseCardDesign(body.Design)
+			if err != nil {
+				fmt.Println(err)
+				c.JSON(500, gin.H{
+					"message": "failed to parse JSON",
+				})
+				return
+			}
+			err = db.SetCardDesign(body.CardID, cd)
+			if err != nil {
+				fmt.Println(err)
 				c.JSON(500, gin.H{
 					"message": "failed to create card (maybe it already exists?)",
 				})
@@ -163,6 +199,22 @@ func Main() {
 
 	r.GET("/enroll", func(c *gin.Context) {
 		c.HTML(200, "enroll.html", gin.H{})
+	})
+
+	r.GET("/customize/:card-id", func(c *gin.Context) {
+		cardID := c.Param("card-id")
+		cardDetails, err := db.GetCardDetails(cardID)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"message": "card not found",
+			})
+			fmt.Println(err)
+			return
+		}
+
+		c.HTML(200, "customizeCard.html", gin.H{
+			"card": cardDetails,
+		})
 	})
 
 	r.GET("/new", func(c *gin.Context) {
