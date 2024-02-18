@@ -24,15 +24,7 @@
 
     <div class="overflow-auto flex-1 flex flex-col gap-4 p-4 pt-0.5">
         {{ range $i, $card := .cards }}
-        <a class="flex-1 bg-citron-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-citron-200 outline"
-            href="/punch/{{ $card.ID }}">
-            <div style="mask:url(/static/images/bubbles.svg);mask-size:cover" class="bg-citron-50 absolute inset-0">
-            </div>
-            <div class="bg-noise-dark absolute inset-0 opacity-30"></div>
-            <span class="text-3xl font-black text-citron-800 font-crimson
-                col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center">{{ $card.Name }}</span>
-            <span class="text-sm absolute bottom-2 w-full text-center text-citron-500">Buy 8 Get 1 Free</span>
-        </a>
+        {{ template "cardFront.html" $card }}
         {{ end }}
     </div>
 </body>

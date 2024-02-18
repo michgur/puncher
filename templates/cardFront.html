@@ -1,0 +1,20 @@
+<!-- class="bg-peach-50 bg-citron-50 bg-gray-50" -->
+<!-- class="bg-peach-100 bg-citron-100 bg-gray-100" -->
+<!-- class="outline-peach-200 outline-citron-200 outline-gray-200" -->
+<!-- class="text-peach-500 text-citron-500 text-gray-500" -->
+<!-- class="text-peach-800 text-citron-800 text-gray-800" -->
+<a class="flex-1 bg-{{ .Design.Color }}-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-{{ .Design.Color }}-200 outline"
+    href="/punch/{{ .ID }}">
+    {{ if .Design.Pattern }}
+    <div style="mask:url(/static/images/{{ .Design.Pattern }});mask-size:cover"
+        class="bg-{{ .Design.Color }}-50 absolute inset-0">
+    </div>
+    {{ end }}
+    {{ if .Design.Pattern }}
+    <div style="background-image:url(/static/images/{{ .Design.Texture }});background-size:50%"
+        class="bg-noise-dark absolute inset-0 opacity-{{ .Design.TextureOpacity }}"></div>
+    {{ end }}
+    <span class="text-3xl font-black text-{{ .Design.Color }}-800 {{ .Design.Font }}
+                col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center">{{ .Name }}</span>
+    <span class="text-sm absolute bottom-2 w-full text-center text-{{ .Design.Color }}-500">Buy 8 Get 1 Free</span>
+</a>

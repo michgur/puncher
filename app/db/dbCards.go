@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 
+	"github.com/michgur/puncher/app/design"
 	"github.com/michgur/puncher/app/model"
 	"github.com/pquerna/otp/totp"
 )
@@ -39,7 +40,12 @@ func NewCard(details model.CardDetails) error {
 
 func GetCardDetails(cardID string) (model.CardDetails, error) {
 	var details model.CardDetails
-	err := QueryRow("card-details-select.sql", cardID).Scan(&details.ID, &details.Name, &details.Secret)
+	var designJSON string
+	err := QueryRow("card-details-select.sql", cardID).Scan(&details.ID, &details.Name, &details.Secret, &designJSON)
+	if err != nil {
+		return details, err
+	}
+	details.Design, err = design.ParseCardDesign(designJSON)
 	return details, err
 }
 
@@ -53,10 +59,16 @@ func GetAllCardDetails() ([]model.CardDetails, error) {
 	var details []model.CardDetails
 	for rows.Next() {
 		var d model.CardDetails
-		err = rows.Scan(&d.ID, &d.Name, &d.Secret)
+		var designJSON string
+		err = rows.Scan(&d.ID, &d.Name, &d.Secret, &designJSON)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
+		}
+		// parse design as JSON
+		d.Design, err = design.ParseCardDesign(designJSON)
+		if err != nil {
+			fmt.Println("Error parsing design:", err)
 		}
 		details = append(details, d)
 	}
