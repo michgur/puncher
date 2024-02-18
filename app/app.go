@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/a-h/templ/examples/integration-gin/gintemplrenderer"
+
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/michgur/puncher/app/db"
 	"github.com/michgur/puncher/app/design"
 	"github.com/michgur/puncher/app/model"
 	"github.com/michgur/puncher/app/otp"
+	"github.com/michgur/puncher/app/templ"
 )
 
 func Main() {
@@ -20,6 +23,7 @@ func Main() {
 	*/
 
 	r := gin.Default()
+	r.HTMLRender = gintemplrenderer.Default
 
 	// add gzip middleware
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
@@ -129,7 +133,7 @@ func Main() {
 		})
 	}
 
-	r.LoadHTMLGlob("templates/*")
+	// r.LoadHTMLGlob("templates/*")
 	r.GET("/punch/:card-id", func(c *gin.Context) {
 		cardID := c.Param("card-id")
 		cardDetails, err := db.GetCardDetails(cardID)
@@ -190,11 +194,7 @@ func Main() {
 			})
 			return
 		}
-		println(cards)
-		c.HTML(200, "cards.html", gin.H{
-			"cards":      cards,
-			"eightTimes": [8]struct{}{},
-		})
+		c.HTML(200, "", templ.AllCards(cards))
 	})
 
 	r.GET("/enroll", func(c *gin.Context) {
@@ -212,13 +212,24 @@ func Main() {
 			return
 		}
 
-		c.HTML(200, "customizeCard.html", gin.H{
-			"card": cardDetails,
-		})
+		c.HTML(200, "", templ.CustomizeCard(cardDetails))
 	})
 
 	r.GET("/new", func(c *gin.Context) {
 		c.HTML(200, "newCard.html", gin.H{})
+	})
+
+	r.GET("/hello", func(c *gin.Context) {
+		c.HTML(200, "", templ.Card(model.CardDetails{
+			Name: "Yael's Fan Club",
+			Design: design.CardDesign{
+				Color:          "citron",
+				Font:           "font-pacifico",
+				Pattern:        "bubbles.svg",
+				Texture:        "noise-dark.png",
+				TextureOpacity: 30,
+			},
+		}))
 	})
 
 	r.Static("/static", "./static")

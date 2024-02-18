@@ -1,0 +1,36 @@
+package templ
+
+import (
+	"github.com/michgur/puncher/app/model"
+	"fmt"
+)
+
+templ Card(card model.CardDetails) {
+	<!-- class="bg-peach-50 bg-citron-50 bg-gray-50" -->
+	<!-- class="bg-peach-100 bg-citron-100 bg-gray-100" -->
+	<!-- class="outline-peach-200 outline-citron-200 outline-gray-200" -->
+	<!-- class="text-peach-500 text-citron-500 text-gray-500" -->
+	<!-- class="text-peach-800 text-citron-800 text-gray-800" -->
+	<!-- class="opacity-10 opacity-20 opacity-30 opacity-40 opacity-50 opacity-60" -->
+	<a
+		class={ fmt.Sprintf("basis-auto grow-0 shrink-0 bg-%s-100 pb-[50%%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-%s-200 outline", card.Design.Color, card.Design.Color) }
+		href={ templ.SafeURL("/punch/" + card.ID) }
+	>
+		if (card.Design.Pattern != "") {
+			<div
+				{ templ.Attributes{"style": fmt.Sprintf("mask:url(/static/images/%s);", card.Design.Pattern)}... }
+				class={ fmt.Sprintf("bg-%s-50 absolute inset-0", card.Design.Color) }
+			></div>
+		}
+		if card.Design.Texture != "" {
+			<div
+				{ templ.Attributes{"style": fmt.Sprintf("background-image:url(/static/images/%s);background-size:50%%", card.Design.Texture)}... }
+				class={ fmt.Sprintf("bg-%s-50 absolute inset-0 opacity-%d", card.Design.Color, card.Design.TextureOpacity) }
+			></div>
+		}
+		<span
+			class={ fmt.Sprintf("text-3xl font-black text-%s-800 %s col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design.Color, card.Design.Font) }
+		>{  card.Name }</span>
+		<span class={ fmt.Sprintf("text-sm absolute bottom-2 w-full text-center text-%s-500", card.Design.Color) }>Buy 8 Get 1 Free</span>
+	</a>
+}

@@ -1,0 +1,14 @@
+package templ
+
+templ Index(title string) {
+	<!DOCTYPE html>
+	<html class="overflow-hidden">
+		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title }</title>
+			<script src="/static/htmx.min.js"></script>
+			<link href="/static/app.css" rel="stylesheet"/>
+		</head>
+		{ children... }
+	</html>
+}

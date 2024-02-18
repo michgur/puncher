@@ -1,0 +1,30 @@
+{
+    "font": {
+        "template": "font.html",
+        "options": {
+            "System UI": {
+                "class": ""
+            },
+            "Crimson Text": {
+                "class": "font-crimson"
+            },
+            "Pacifico": {
+                "class": "font-pacifico"
+            }
+        }
+    },
+    "color": {
+        "template": "color.html",
+        "options": {
+            "Default": {
+                "class": ""
+            },
+            "Red": {
+                "class": "color-red"
+            },
+            "Blue": {
+                "class": "color-blue"
+            }
+        }
+    }
+}
