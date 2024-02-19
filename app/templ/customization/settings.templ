@@ -1,0 +1,104 @@
+package customization
+
+import "github.com/michgur/puncher/app/design"
+import "fmt"
+
+templ Color(name string, setting design.DesignOption, checked bool) {
+	<div class="relative">
+		<input
+			if checked {
+				checked
+			}
+			type="radio"
+			value={ setting["color"] }
+			name="color"
+			id={ "color-" + setting["color"] }
+			{ design.Class("absolute inset-0 appearance-none transition-all checked:outline-2 checked:bg-{ color }-50 checked:shadow-md rounded-full bg-{ color }-100 outline outline-1 outline-{ color }-200 -z-10", setting)... }
+		/>
+		<label
+			title={ name }
+			class="cursor-pointer w-14 h-14 text-2xl flex justify-center items-center"
+			for={ "color-" + setting["color"] }
+		>{ setting["emoji"] }</label>
+	</div>
+}
+
+templ Font(name string, setting design.DesignOption, checked bool) {
+	<div class="relative">
+		<input
+			if checked {
+				checked
+			}
+			type="radio"
+			value={ setting["class"] }
+			name="font"
+			id={ "font-" + setting["class"] }
+			class="appearance-none absolute inset-0 transition-all checked:bg-gray-50 checked:shadow-md rounded-sm bg-gray-100 outline outline-1 outline-gray-300 checked:outline-2 -z-10"
+		/>
+		<label title={ name } for={ "font-" + setting["class"] } { design.Class("cursor-pointer whitespace-nowrap px-4 py-2 text-xl flex justify-center items-center { class }", setting)... }>{ name }</label>
+	</div>
+}
+
+templ Pattern(name string, setting design.DesignOption, checked bool) {
+	<div class="relative">
+		<input
+			if checked {
+				checked
+			}
+			if setting["filename"] == "" {
+				title={ name }
+			}
+			type="radio"
+			value={ setting["filename"] }
+			name="pattern"
+			id={ "pattern-" + setting["filename"] }
+			class="cursor-pointer appearance-none relative transition-all checked:bg-gray-50 checked:shadow-md rounded-full bg-gray-100 outline outline-1 outline-gray-400 w-14 h-14 checked:outline-2"
+		/>
+		if setting["filename"] != "" {
+			<label
+				for={ "pattern-" + setting["filename"] }
+				title={ name }
+				{ design.Style("mask: url(/static/images/{ filename });mask-size: fit", setting)... }
+				class="cursor-pointer bg-gray-300 absolute inset-0 rounded-full overflow-hidden w-14 h-14"
+			></label>
+		}
+	</div>
+}
+
+templ Texture(name string, setting design.DesignOption, checked bool) {
+	<div class="relative">
+		<input
+			if checked {
+				checked
+			}
+			type="radio"
+			value={ setting["filename"] }
+			name="texture"
+			id={ "texture-" + setting["filename"] }
+			if setting["filename"] == "" {
+				title={ name }
+			}
+			class="cursor-pointer appearance-none relative transition-all checked:bg-gray-50 checked:shadow-md rounded-full bg-gray-100 outline outline-1 outline-gray-400 w-14 h-14 checked:outline-2"
+		/>
+		if setting["filename"] != "" {
+			<label
+				for={ "texture-" + setting["filename"] }
+				title={ name }
+				{ design.Style("background-image:url(/static/images/{ filename });background-size:50%", setting)... }
+				class="cursor-pointer bg-gray-300 absolute inset-0 rounded-full overflow-hidden w-14 h-14"
+			></label>
+		}
+	</div>
+}
+
+templ TextureOpacity(value int) {
+	<input
+		name="textureOpacity"
+		type="range"
+		min="0"
+		max="100"
+		step="10"
+		value={ fmt.Sprintf("%d", value) }
+		class="bg-transparent w-full appearance-none bg-transparent rounded-md slider-thumb:appearance-none slider-thumb:bg-black slider-thumb:w-5 slider-thumb:h-5 slider-thumb:rounded-full slider-thumb:pointer-cursor slider-track:bg-gray-200 slider-track:h-3 slider-track:rounded-md slider-thumb:-translate-y-1 slider-track:outline slider-track:outline-1 slider-track:outline-gray-400 "
+	/>
+}

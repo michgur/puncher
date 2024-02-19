@@ -3,6 +3,7 @@ package design
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 type Font string
@@ -71,4 +72,21 @@ func ParseCardDesign(design string) (CardDesign, error) {
 		cd.Color = Gray
 	}
 	return cd, err
+}
+
+type DesignOption map[string]string
+type DesignSetting map[string]DesignOption
+type DesignConfig map[string]DesignSetting
+
+func ReadDesignConfig() (DesignConfig, error) {
+	f, err := os.ReadFile("./design.settings.json")
+	if err != nil {
+		return nil, err
+	}
+	var conf DesignConfig
+	err = json.Unmarshal([]byte(f), &conf)
+	if err != nil {
+		return nil, err
+	}
+	return conf, nil
 }

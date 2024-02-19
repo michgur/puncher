@@ -1,4 +1,4 @@
 *.db
 go.sum
 gin-bin
-app/templ/*_templ.*
+app/templ/**/*_templ.*

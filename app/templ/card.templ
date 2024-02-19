@@ -2,35 +2,59 @@ package templ
 
 import (
 	"github.com/michgur/puncher/app/model"
-	"fmt"
+	"github.com/michgur/puncher/app/design"
 )
 
-templ Card(card model.CardDetails) {
+templ cardName(card model.CardDetails, editable bool) {
+	if editable {
+		<input name="name" class="hidden" type="text" value={ card.Name }/>
+		<div
+			oninput="this.previousElementSibling.value = this.textContent"
+			onblur="this.previousElementSibling.form.requestSubmit()"
+			onkeydown="if (event.key === 'Enter') { this.blur() } if (this.textContent.length > 40 && event.key !== 'Backspace' && event.key !== 'Delete') { event.preventDefault() }"
+			contenteditable="true"
+			{ design.Class("p-2 flex items-center justify-center peer appearance-none bg-transparent rounded-lg h-full outline-none focus:border-2 focus:border-{ color }-500 text-3xl font-black text-{ color }-800 { font } col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design)... }
+		>{ card.Name }</div>
+		<input
+			type="submit"
+			value="✓"
+			{ design.Class("peer-focus:opacity-100 opacity-0 transition-all absolute bottom-2 right-2 appearance-none bg-{ color }-500 rounded-full w-6 h-6 z-10 text-{ color }-200", card.Design)... }
+		/>
+	} else {
+		<span
+			{ design.Class("text-3xl font-black text-{ color }-800 { font } col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design)... }
+		>{ card.Name }</span>
+	}
+}
+
+templ Card(card model.CardDetails, editable bool) {
+	<!-- class="bg-peach-500 bg-citron-500 bg-gray-500" -->
 	<!-- class="bg-peach-50 bg-citron-50 bg-gray-50" -->
 	<!-- class="bg-peach-100 bg-citron-100 bg-gray-100" -->
 	<!-- class="outline-peach-200 outline-citron-200 outline-gray-200" -->
+	<!-- class="focus:border-peach-500 focus:border-citron-500 focus:border-gray-500" -->
+	<!-- class="text-peach-200 text-citron-200 text-gray-200" -->
 	<!-- class="text-peach-500 text-citron-500 text-gray-500" -->
 	<!-- class="text-peach-800 text-citron-800 text-gray-800" -->
-	<!-- class="opacity-10 opacity-20 opacity-30 opacity-40 opacity-50 opacity-60" -->
-	<a
-		class={ fmt.Sprintf("basis-auto grow-0 shrink-0 bg-%s-100 pb-[50%%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-%s-200 outline", card.Design.Color, card.Design.Color) }
-		href={ templ.SafeURL("/punch/" + card.ID) }
+	<!-- class="opacity-0 opacity-10 opacity-20 opacity-30 opacity-40 opacity-50 opacity-60 opacity-70 opacity-80 opacity-90 opacity-100" -->
+	<div
+		{ design.Class("basis-auto grow-0 shrink-0 bg-{ color }-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-{ color }-200 outline", card.Design)... }
 	>
 		if (card.Design.Pattern != "") {
 			<div
-				{ templ.Attributes{"style": fmt.Sprintf("mask:url(/static/images/%s);", card.Design.Pattern)}... }
-				class={ fmt.Sprintf("bg-%s-50 absolute inset-0", card.Design.Color) }
+				{ design.Style("mask:url(/static/images/{ pattern });mask-size:cover", card.Design)... }
+				{ design.Class("bg-{ color }-50 absolute inset-0", card.Design)... }
 			></div>
 		}
 		if card.Design.Texture != "" {
 			<div
-				{ templ.Attributes{"style": fmt.Sprintf("background-image:url(/static/images/%s);background-size:50%%", card.Design.Texture)}... }
-				class={ fmt.Sprintf("bg-%s-50 absolute inset-0 opacity-%d", card.Design.Color, card.Design.TextureOpacity) }
+				{ design.Style("background-image:url(/static/images/{ texture });background-size:50%", card.Design)... }
+				{ design.Class("bg-{ color }-50 absolute inset-0 opacity-{ textureOpacity }", card.Design)... }
 			></div>
 		}
+		@cardName(card, editable)
 		<span
-			class={ fmt.Sprintf("text-3xl font-black text-%s-800 %s col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design.Color, card.Design.Font) }
-		>{  card.Name }</span>
-		<span class={ fmt.Sprintf("text-sm absolute bottom-2 w-full text-center text-%s-500", card.Design.Color) }>Buy 8 Get 1 Free</span>
-	</a>
+			{ design.Class("text-sm absolute bottom-2 w-full text-center text-{ color }-500", card.Design)... }
+		>Buy 8 Get 1 Free</span>
+	</div>
 }

@@ -1,7 +1,9 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/a-h/templ/examples/integration-gin/gintemplrenderer"
@@ -14,6 +16,17 @@ import (
 	"github.com/michgur/puncher/app/otp"
 	"github.com/michgur/puncher/app/templ"
 )
+
+func validateRequest(c *gin.Context, err error) bool {
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(400, gin.H{
+			"message": "bad request",
+		})
+		return false
+	}
+	return true
+}
 
 func Main() {
 	/*
@@ -79,7 +92,7 @@ func Main() {
 				})
 				return
 			}
-			err = db.SetCardDesign(body.CardID, cd)
+			err = db.SetCardNameAndDesign(body.CardID, "", cd)
 			if err != nil {
 				fmt.Println(err)
 				c.JSON(500, gin.H{
@@ -153,7 +166,7 @@ func Main() {
 			fmt.Println(err)
 			return
 		}
-		c.HTML(200, "index.html", gin.H{
+		c.HTML(200, "", gin.H{
 			"otp":        otp,
 			"cardID":     cardID,
 			"cardName":   cardDetails.Name,
@@ -201,6 +214,41 @@ func Main() {
 		c.HTML(200, "enroll.html", gin.H{})
 	})
 
+	r.POST("/customize/:card-id", func(c *gin.Context) {
+		cardID := c.Param("card-id")
+
+		var body map[string]interface{}
+		err := c.BindJSON(&body)
+		if !validateRequest(c, err) {
+			return
+		}
+
+		var card model.CardDetails
+		card.Name = body["name"].(string)
+		body["textureOpacity"], err = strconv.Atoi(body["textureOpacity"].(string))
+		if !validateRequest(c, err) {
+			return
+		}
+		s, err := json.Marshal(body)
+		if !validateRequest(c, err) {
+			return
+		}
+		err = json.Unmarshal(s, &card.Design)
+		if !validateRequest(c, err) {
+			return
+		}
+
+		err = db.SetCardNameAndDesign(cardID, card.Name, card.Design)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(500, gin.H{
+				"message": "failed to update card",
+			})
+			return
+		}
+		c.HTML(200, "", templ.Card(card, true))
+	})
+
 	r.GET("/customize/:card-id", func(c *gin.Context) {
 		cardID := c.Param("card-id")
 		cardDetails, err := db.GetCardDetails(cardID)
@@ -212,7 +260,15 @@ func Main() {
 			return
 		}
 
-		c.HTML(200, "", templ.CustomizeCard(cardDetails))
+		conf, err := design.ReadDesignConfig()
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": "failed to load customization options",
+			})
+			fmt.Println(err)
+			return
+		}
+		c.HTML(200, "", templ.CustomizeCard(cardDetails, conf))
 	})
 
 	r.GET("/new", func(c *gin.Context) {
@@ -229,7 +285,7 @@ func Main() {
 				Texture:        "noise-dark.png",
 				TextureOpacity: 30,
 			},
-		}))
+		}, false))
 	})
 
 	r.Static("/static", "./static")

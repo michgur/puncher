@@ -61,6 +61,10 @@ module.exports = {
 
       addSlotVariant('slot');
       addSlotVariant('slot-hover', ':hover');
+    }),
+    plugin(({ addVariant }) => {
+      addVariant('slider-thumb', ['&::-webkit-slider-thumb', '&::-moz-range-thumb']);
+      addVariant('slider-track', ['&::-webkit-slider-runnable-track', '&::-moz-range-track']);
     })
   ],
 }

@@ -3,31 +3,21 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .cardName }}</title>
-    <script src="/static/htmx.min.js"></script>
-    <link href="/static/app.css" rel="stylesheet">
-
-    {{ template "comp_otpInput.html" . }}
+    <script src="../static/htmx.min.js"></script>
+    <link href="../static/app.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-300">
-    <header class="p-2">
-        <h1 class="text-5xl text-gray-700 font-semibold">{{ .cardName }}</h1>
-        <p>Enter OTP: <i class="text-gray-500">(hint - it's {{ .otp }})</i>.</p>
-    </header>
+    <form>
+        <input type="radio" id="option1" name="selection" value="Option1" class="appearance-none checked:bg-citron-700">
+        <label for="option1">Option 1</label><br>
 
-    <otp-input path="/validate/{{ .cardID }}" digits="4"></otp-input>
+        <input type="radio" id="option2" name="selection" value="Option2">
+        <label for="option2">Option 2</label><br>
 
-    <div class="m-2 py-4 bg-purple-300 rounded-3xl">
-        <span class="text-2xl font-black text-purple-700 col-span-4 m-auto block w-fit mb-3">Milkshake Time!</span>
-        <div class="grid grid-cols-4 grid-rows-2 gap-4 items-center justify-items-center">
-            {{ range $i, $_ := .eightTimes }}
-            <div
-                class="w-3/4 aspect-square outline-dashed outline-2 outline-purple-400 rounded-full hover:bg-gray-300 hover:shadow-[inset_0_10px_#0002] transition-all">
-            </div>
-            {{ end }}
-        </div>
-    </div>
+        <input type="radio" id="option3" name="selection" value="Option3">
+        <label for="option3">Option 3</label>
+    </form>
 </body>
 
 </html>
