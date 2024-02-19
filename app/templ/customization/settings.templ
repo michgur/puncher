@@ -13,7 +13,7 @@ templ Color(name string, setting design.DesignOption, checked bool) {
 			value={ setting["color"] }
 			name="color"
 			id={ "color-" + setting["color"] }
-			{ design.Class("absolute inset-0 appearance-none transition-all checked:outline-2 checked:bg-{ color }-50 checked:shadow-md rounded-full bg-{ color }-100 outline outline-1 outline-{ color }-200 -z-10", setting)... }
+			{ design.Class("absolute inset-0 w-14 h-14 appearance-none transition-all checked:outline-2 checked:bg-{ color }-50 checked:shadow-md rounded-full bg-{ color }-100 outline outline-1 outline-{ color }-200 -z-10", setting)... }
 		/>
 		<label
 			title={ name }
@@ -33,7 +33,7 @@ templ Font(name string, setting design.DesignOption, checked bool) {
 			value={ setting["class"] }
 			name="font"
 			id={ "font-" + setting["class"] }
-			class="appearance-none absolute inset-0 transition-all checked:bg-gray-50 checked:shadow-md rounded-sm bg-gray-100 outline outline-1 outline-gray-300 checked:outline-2 -z-10"
+			class="appearance-none absolute w-full h-full transition-all checked:bg-gray-50 checked:shadow-md rounded-sm bg-gray-100 outline outline-1 outline-gray-300 checked:outline-2 -z-10"
 		/>
 		<label title={ name } for={ "font-" + setting["class"] } { design.Class("cursor-pointer whitespace-nowrap px-4 py-2 text-xl flex justify-center items-center { class }", setting)... }>{ name }</label>
 	</div>
@@ -99,6 +99,6 @@ templ TextureOpacity(value int) {
 		max="100"
 		step="10"
 		value={ fmt.Sprintf("%d", value) }
-		class="bg-transparent w-full appearance-none bg-transparent rounded-md slider-thumb:appearance-none slider-thumb:bg-black slider-thumb:w-5 slider-thumb:h-5 slider-thumb:rounded-full slider-thumb:pointer-cursor slider-track:bg-gray-200 slider-track:h-3 slider-track:rounded-md slider-thumb:-translate-y-1 slider-track:outline slider-track:outline-1 slider-track:outline-gray-400 "
+		class="bg-transparent w-full appearance-none bg-transparent rounded-md slider-thumb:appearance-none slider-thumb:bg-black slider-thumb:w-5 slider-thumb:h-5 slider-thumb:rounded-full slider-thumb:cursor-pointer slider-track:bg-gray-200 slider-track:h-3 slider-track:rounded-md slider-thumb:-translate-y-1 slider-track:outline slider-track:outline-1 slider-track:outline-gray-400 "
 	/>
 }

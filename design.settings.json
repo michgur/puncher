@@ -13,7 +13,7 @@
     "color": {
         "Gray": {
             "color": "gray",
-            "emoji": "🐁"
+            "emoji": "🥚"
         },
         "Citron": {
             "color": "citron",
@@ -22,6 +22,14 @@
         "Peach": {
             "color": "peach",
             "emoji": "🍑"
+        },
+        "Blueberry": {
+            "color": "blueberry",
+            "emoji": "🫐"
+        },
+        "Brown": {
+            "color": "brown",
+            "emoji": "🪨"
         }
     },
     "pattern": {
@@ -30,6 +38,9 @@
         },
         "Bubbles": {
             "filename": "bubbles.svg"
+        },
+        "Stripes": {
+            "filename": "stripes.svg"
         }
     },
     "texture": {
