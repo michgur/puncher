@@ -9,7 +9,7 @@
 <body>
     <h1>Enroll</h1>
 
-    <form hx-ext="json-enc" hx-post="/api/cards/new">
+    <form hx-ext="json-enc" hx-post="/api/cards/new" class="animate-pulse">
         <input type="text" name="cardName" placeholder="Card Name" />
         <input type="text" name="cardID" placeholder="Card ID (lowercase letters + dashes supported)" />
         <input type="submit" value="Create" />

@@ -7,6 +7,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'card': {
+          '50': 'var(--card-50)',
+          '100': 'var(--card-100)',
+          '200': 'var(--card-200)',
+          '300': 'var(--card-300)',
+          '400': 'var(--card-400)',
+          '500': 'var(--card-500)',
+          '600': 'var(--card-600)',
+          '700': 'var(--card-700)',
+          '800': 'var(--card-800)',
+          '900': 'var(--card-900)',
+          '950': 'var(--card-950)',
+        },
         'citron': {
           '50': '#fafbea',
           '100': '#f5f6c6',
@@ -60,17 +73,17 @@ module.exports = {
           '950': '#3e1a11',
         },
         'brown': {
-          '50': '#f4f3f2',
-          '100': '#e3e0de',
-          '200': '#c9c4bf',
-          '300': '#a9a19b',
-          '400': '#91857e',
-          '500': '#827670',
-          '600': '#6f635f',
-          '700': '#5a504e',
-          '800': '#524948',
-          '900': '#453e3e',
-          '950': '#262222',
+          '50': '#f5f3f1',
+          '100': '#e6e0db',
+          '200': '#cfc3b9',
+          '300': '#b39f91',
+          '400': '#9c8373',
+          '500': '#8e7364',
+          '600': '#795e55',
+          '700': '#624b46',
+          '800': '#54413f',
+          '900': '#4a3a39',
+          '950': '#291f1f',
         },
       },
     },
@@ -91,6 +104,21 @@ module.exports = {
     plugin(({ addVariant }) => {
       addVariant('slider-thumb', ['&::-webkit-slider-thumb', '&::-moz-range-thumb']);
       addVariant('slider-track', ['&::-webkit-slider-runnable-track', '&::-moz-range-track']);
+    }),
+    plugin(({ addUtilities, theme }) => {
+      const colors = theme('colors');
+      let newUtilities = {};
+
+      Object.keys(colors).forEach(color => {
+        if (color !== 'card' && typeof colors[color] === 'object') {
+          newUtilities[`.card-${color}`] = Object.keys(colors[color]).reduce((acc, key) => {
+            acc[`--card-${key}`] = colors[color][key];
+            return acc;
+          }, {});
+        }
+      });
+
+      addUtilities(newUtilities, ['responsive', 'hover']);
     })
   ],
 }

@@ -70,54 +70,6 @@ func Main() {
 			})
 		})
 
-		type CustomizeBody struct {
-			CardID string `json:"cardID"`
-			Design string `json:"design"`
-		}
-		api.POST("/cards/customize", func(c *gin.Context) {
-			var body CustomizeBody
-			err := c.BindJSON(&body)
-			if err != nil {
-				fmt.Println(err)
-				c.JSON(400, gin.H{
-					"message": "bad request",
-				})
-				return
-			}
-			cd, err := design.ParseCardDesign(body.Design)
-			if err != nil {
-				fmt.Println(err)
-				c.JSON(500, gin.H{
-					"message": "failed to parse JSON",
-				})
-				return
-			}
-			err = db.SetCardNameAndDesign(body.CardID, "", cd)
-			if err != nil {
-				fmt.Println(err)
-				c.JSON(500, gin.H{
-					"message": "failed to create card (maybe it already exists?)",
-				})
-				return
-			}
-			c.JSON(200, gin.H{
-				"message": "card created",
-			})
-		})
-
-		api.GET("/cards", func(c *gin.Context) {
-			cards, err := db.GetAllCardInstances()
-			if err != nil {
-				c.JSON(500, gin.H{
-					"message": "error fetching cards",
-				})
-				return
-			}
-			c.JSON(200, gin.H{
-				"cards": cards,
-			})
-		})
-
 		type EnrollBody struct {
 			CardID string `json:"cardID"`
 		}

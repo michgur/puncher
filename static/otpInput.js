@@ -16,6 +16,12 @@
     }
 
     class OtpInput extends HTMLElement {
+        static observedAttributes = ["path"];
+
+        focus() {
+            this.querySelector("[autofocus]").focus();
+        }
+
         trySubmit() {
             if (this.digits.every(el => el.value !== '')) {
                 this.form.requestSubmit();
@@ -90,6 +96,8 @@
         connectedCallback() {
             // # of digits in OTP
             const numberOfDigits = (+this.getAttribute('digits')) || 4;
+            // check if inputs already exist
+            if (this.querySelectorAll('input').length === numberOfDigits) return;
             // fill with existing value (for presisting state)
             const value = this.getAttribute('value') || '';
             // HTTP GET request path
@@ -128,6 +136,16 @@
 
             // update hx-get path to use digit inputs
             this.form.setAttribute('hx-get', path);
+        }
+
+        attributeChangedCallback(name, _, newValue) {
+            if (name === 'path') {
+                let path = newValue + "/";
+                for (let i = 0; i < this.digits.length; i++) {
+                    path += `{digit${i}}`;
+                }
+                this.form.setAttribute('hx-get', path);
+            }
         }
     }
 

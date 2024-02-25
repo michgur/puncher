@@ -13,48 +13,39 @@ templ cardName(card model.CardDetails, editable bool) {
 			onblur="this.previousElementSibling.form.requestSubmit()"
 			onkeydown="if (event.key === 'Enter') { this.blur() } if (this.textContent.length > 40 && event.key !== 'Backspace' && event.key !== 'Delete') { event.preventDefault() }"
 			contenteditable="true"
-			{ design.Class("p-2 flex items-center justify-center peer appearance-none bg-transparent rounded-lg h-full outline-none focus:border-2 focus:border-{ color }-500 text-3xl font-black text-{ color }-800 { font } col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design)... }
+			class="p-2 flex items-center justify-center peer appearance-none bg-transparent rounded-lg h-full outline-none focus:border-2 focus:border-card-500 text-3xl text-card-800 col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center"
 		>{ card.Name }</div>
 		<input
 			type="submit"
 			value="✓"
-			{ design.Class("peer-focus:opacity-100 opacity-0 transition-all absolute bottom-2 right-2 appearance-none bg-{ color }-500 rounded-full w-6 h-6 z-10 text-{ color }-200", card.Design)... }
+			class="peer-focus:opacity-100 opacity-0 transition-all absolute bottom-2 right-2 appearance-none bg-card-500 rounded-full w-6 h-6 z-10 text-card-200"
 		/>
 	} else {
 		<span
-			{ design.Class("text-3xl font-black text-{ color }-800 { font } col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center", card.Design)... }
+			class="text-3xl text-card-800 col-span-4 absolute top-1/2 -translate-y-1/2 w-full text-center"
 		>{ card.Name }</span>
 	}
 }
 
 templ Card(card model.CardDetails, editable bool) {
-	<!-- class="bg-brown-500 bg-blueberry-500 bg-peach-500 bg-citron-500 bg-gray-500" -->
-	<!-- class="bg-brown-50 bg-blueberry-50 bg-peach-50 bg-citron-50 bg-gray-50" -->
-	<!-- class="bg-brown-100 bg-blueberry-100 bg-peach-100 bg-citron-100 bg-gray-100" -->
-	<!-- class="outline-brown-200 outline-blueberry-200 outline-peach-200 outline-citron-200 outline-gray-200" -->
-	<!-- class="focus:border-brown-500 focus:border-blueberry-500 focus:border-peach-500 focus:border-citron-500 focus:border-gray-500" -->
-	<!-- class="text-brown-200 text-blueberry-200 text-peach-200 text-citron-200 text-gray-200" -->
-	<!-- class="text-brown-500 text-blueberry-500 text-peach-500 text-citron-500 text-gray-500" -->
-	<!-- class="text-brown-800 text-blueberry-800 text-peach-800 text-citron-800 text-gray-800" -->
 	<!-- class="opacity-0 opacity-10 opacity-20 opacity-30 opacity-40 opacity-50 opacity-60 opacity-70 opacity-80 opacity-90 opacity-100" -->
+	<!-- class="card-brown card-blueberry card-peach card-citron card-gray" -->
 	<div
-		{ design.Class("basis-auto grow-0 shrink-0 bg-{ color }-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-{ color }-200 outline", card.Design)... }
+		{ design.Class("card-{ color } basis-auto grow-0 shrink-0 bg-card-100 pb-[50%] rounded-lg overflow-hidden block relative shadow-md outline-1 outline-card-200 outline { font }", card.Design)... }
 	>
 		if (card.Design.Pattern != "") {
 			<div
 				{ design.Style("mask:url(/static/images/{ pattern });mask-size:cover", card.Design)... }
-				{ design.Class("bg-{ color }-50 absolute inset-0", card.Design)... }
+				class="bg-card-50 absolute inset-0"
 			></div>
 		}
 		if card.Design.Texture != "" {
 			<div
 				{ design.Style("background-image:url(/static/images/{ texture });background-size:50%", card.Design)... }
-				{ design.Class("bg-{ color }-50 absolute inset-0 opacity-{ textureOpacity }", card.Design)... }
+				{ design.Class("absolute inset-0 opacity-{ textureOpacity }", card.Design)... }
 			></div>
 		}
 		@cardName(card, editable)
-		<span
-			{ design.Class("text-sm absolute bottom-2 w-full text-center text-{ color }-500", card.Design)... }
-		>Buy 8 Get 1 Free</span>
+		<span class="text-sm absolute bottom-2 w-full text-center text-card-500 font-[system-ui]">Buy 8 Get 1 Free</span>
 	</div>
 }

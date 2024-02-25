@@ -3,21 +3,12 @@ package design
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strings"
 
 	"github.com/a-h/templ"
 )
 
 func formatString(s string, args interface{}) string {
-	println("------------------------")
-	println("------------------------")
-	println("------------------------")
-	println("------------------------")
-	println("------------------------")
-	// print type of args
-	fmt.Println(reflect.TypeOf(args))
-	println(args)
 	j, err := json.Marshal(&args)
 	if err != nil {
 		panic(err)
