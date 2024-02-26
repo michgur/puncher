@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Puncher API
+Resources:
+  PuncherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main
+      CodeUri: s3://puncher-bucket/d510a21a739c6895ff824fb1052cc7bb
+      Runtime: go1.x
+      MemorySize: 128
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 3
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+Outputs:
+  PuncherApi:
+    Description: Puncher API
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/puncher
+    Export:
+      Name: PuncherApi

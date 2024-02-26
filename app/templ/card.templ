@@ -41,8 +41,8 @@ templ Card(card model.CardDetails, editable bool) {
 		}
 		if card.Design.Texture != "" {
 			<div
-				{ design.Style("background-image:url(/static/images/{ texture });background-size:50%", card.Design)... }
-				{ design.Class("absolute inset-0 opacity-{ textureOpacity }", card.Design)... }
+				{ design.Style("mask:url(/static/images/{ texture })", card.Design)... }
+				{ design.Class("bg-card-600 absolute inset-0 opacity-{ textureOpacity }", card.Design)... }
 			></div>
 		}
 		@cardName(card, editable)
