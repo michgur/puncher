@@ -1,12 +1,16 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/a-h/templ/examples/integration-gin/gintemplrenderer"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
@@ -15,6 +19,8 @@ import (
 	"github.com/michgur/puncher/app/model"
 	"github.com/michgur/puncher/app/otp"
 	"github.com/michgur/puncher/app/templ"
+
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 )
 
 func validateRequest(c *gin.Context, err error) bool {
@@ -28,14 +34,17 @@ func validateRequest(c *gin.Context, err error) bool {
 	return true
 }
 
-func Main() {
+var ginLambda *ginadapter.GinLambda
+var r *gin.Engine
+
+func init() {
 	/*
 		There will be 2 ways to punch a slot:
 		- Physical transactions: business generates an OTP & physically displays it to the client, client enters it
 		- Online transactions: business generates a redeem-link, figure out how to make it secure
 	*/
 
-	r := gin.Default()
+	r = gin.Default()
 	r.HTMLRender = gintemplrenderer.Default
 
 	// add gzip middleware
@@ -241,5 +250,18 @@ func Main() {
 	})
 
 	r.Static("/static", "./static")
-	r.Run() // listen and serve on
+
+	ginLambda = ginadapter.New(r)
+}
+
+func Handler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.ProxyWithContext(context, request)
+}
+
+func Main() {
+	if os.Getenv("ENV") == "lambda" {
+		lambda.Start(Handler)
+	} else {
+		r.Run(":8080")
+	}
 }

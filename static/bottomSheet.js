@@ -12,17 +12,21 @@ class BottomSheet extends HTMLElement {
         this.modalBody = this.querySelector('.modal-body');
         this.attributeChangedCallback('content', null, this.getAttribute('content'));
         this.scrim = this.querySelector('.scrim');
-        this.scrim.addEventListener('click', (e) => {
+        this.scrim.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.close();
+        });
+        this.scrim.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.close();
         });
         this.grabber = this.querySelector('.grabber');
+        this.grabber.addEventListener('click', this.close.bind(this));
         this.grabber.addEventListener('mousedown', this.grabberMouseDown.bind(this));
         this.grabber.addEventListener('touchstart', this.grabberMouseDown.bind(this));
     }
 
     grabberMouseDown(e) {
-        e.preventDefault();
         const startY = clientY(e);
         const mouseMove = (e) => {
             const delta = Math.max((clientY(e) - startY) * 0.6, -20);
@@ -52,7 +56,6 @@ class BottomSheet extends HTMLElement {
     }
 
     open() {
-        // this.setAttribute('content', selector);
         this.modal.ariaHidden = false;
         setTimeout(() => {
             this.modal.ariaExpanded = true;
