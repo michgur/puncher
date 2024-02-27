@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/michgur/puncher/app/model"
+	_ "modernc.org/sqlite"
 )
 
 var sqlsPath = "./sqls"
@@ -40,7 +40,7 @@ func init() {
 	// fetch queries
 	var err = ReadSQLs()
 	// create the database
-	db, err = sql.Open("sqlite3", "puncher.db")
+	db, err = sql.Open("sqlite", "puncher.db")
 	if err != nil {
 		fmt.Println("Error opening database:", err)
 		return

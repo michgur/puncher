@@ -1,3 +1,4 @@
 *.db
 gin-bin
 app/templ/**/*_templ.txt
+main
