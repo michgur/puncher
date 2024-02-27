@@ -1,5 +1,5 @@
 *.db
 gin-bin
-app/templ/**/*_templ.txt
+app/templ/**/*_templ.*
 main
 main.zip
