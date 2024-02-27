@@ -23,6 +23,8 @@ jobs:
 
     - name: Generate templ code
       uses: capthiron/templ-generator-action@v1
+      with:
+        commit: "false"
 
     - name: Build
       run: GOARCH=amd64 GOOS=linux go build -o main main.go
