@@ -21,7 +21,6 @@ func formatString(s string, args interface{}) string {
 	}
 	// replace each "{ key }" with "value"
 	for k, v := range m {
-		fmt.Println(k, v)
 		s = strings.ReplaceAll(s, fmt.Sprintf("{ %s }", k), fmt.Sprintf("%v", v))
 	}
 	return s

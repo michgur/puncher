@@ -28,9 +28,6 @@ func ReadSQLs() error {
 			return err
 		}
 		sqls[fname.Name()] = string(f)
-		println(fname.Name())
-		println(fname.Name())
-		println(fname.Name())
 	}
 
 	return nil

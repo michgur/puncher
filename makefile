@@ -7,7 +7,7 @@ build:
 	GOARCH=amd64 GOOS=linux go build -o main main.go
 
 zip:
-	zip main.zip main sqls/* static/**/* design.settings.json puncher.db
+	zip main.zip main sqls/* static/**/* design.settings.json
 
 package:
 	aws cloudformation package --template-file sam.yaml --output-template-file output-sam.yaml --s3-bucket puncher-bucket

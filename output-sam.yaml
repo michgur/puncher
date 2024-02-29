@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: main
-      CodeUri: s3://puncher-bucket/c83af5a9664585030f7e71a22414052b
+      CodeUri: s3://puncher-bucket/0394b3dfa39a99ad0f02c554463f4e80
       Runtime: go1.x
       MemorySize: 128
       Policies: AWSLambdaBasicExecutionRole
