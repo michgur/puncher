@@ -19,13 +19,3 @@
 .font-crimson {
     font-family: 'CrimsonText', serif;
 }
-
-.bg-noise-light {
-    background-image: url('/static/images/noise-light.png');
-    background-size: 50%;
-}
-
-.bg-noise-dark {
-    background-image: url('/static/images/noise-dark.png');
-    background-size: 50%;
-}

@@ -1,11 +1,15 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/a-h/templ/examples/integration-gin/gintemplrenderer"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/michgur/puncher/app/db"
+	"github.com/michgur/puncher/app/design"
 	"github.com/michgur/puncher/app/model"
 	"github.com/michgur/puncher/app/templ"
 )
@@ -33,7 +37,7 @@ func init() {
 	R.HTMLRender = gintemplrenderer.Default
 
 	// add gzip middleware
-	// R.Use(gzip.Gzip(gzip.DefaultCompression))
+	R.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	R.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -160,78 +164,65 @@ func init() {
 	// 	c.HTML(200, "enroll.html", gin.H{})
 	// })
 
-	// R.POST("/customize/:card-id", func(c *gin.Context) {
-	// 	cardID := c.Param("card-id")
+	R.POST("/customize/:card-id", func(c *gin.Context) {
+		cardID := c.Param("card-id")
 
-	// 	var body map[string]interface{}
-	// 	err := c.BindJSON(&body)
-	// 	if !validateRequest(c, err) {
-	// 		return
-	// 	}
+		var body map[string]interface{}
+		err := c.BindJSON(&body)
+		if !validateRequest(c, err) {
+			return
+		}
 
-	// 	var card model.CardDetails
-	// 	card.Name = body["name"].(string)
-	// 	body["textureOpacity"], err = strconv.Atoi(body["textureOpacity"].(string))
-	// 	if !validateRequest(c, err) {
-	// 		return
-	// 	}
-	// 	s, err := json.Marshal(body)
-	// 	if !validateRequest(c, err) {
-	// 		return
-	// 	}
-	// 	err = json.Unmarshal(s, &card.Design)
-	// 	if !validateRequest(c, err) {
-	// 		return
-	// 	}
+		var card model.CardDetails
+		card.Name = body["name"].(string)
+		body["textureOpacity"], err = strconv.Atoi(body["textureOpacity"].(string))
+		if !validateRequest(c, err) {
+			return
+		}
+		s, err := json.Marshal(body)
+		if !validateRequest(c, err) {
+			return
+		}
+		err = json.Unmarshal(s, &card.Design)
+		if !validateRequest(c, err) {
+			return
+		}
 
-	// 	err = db.SetCardNameAndDesign(cardID, card.Name, card.Design)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		c.JSON(500, gin.H{
-	// 			"message": "failed to update card",
-	// 		})
-	// 		return
-	// 	}
-	// 	c.HTML(200, "", templ.Card(card, true))
-	// })
+		err = db.SetCardNameAndDesign(cardID, card.Name, card.Design)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(500, gin.H{
+				"message": "failed to update card",
+			})
+			return
+		}
+		c.HTML(200, "", templ.Card(card, true))
+	})
 
-	// R.GET("/customize/:card-id", func(c *gin.Context) {
-	// 	cardID := c.Param("card-id")
-	// 	cardDetails, err := db.GetCardDetails(cardID)
-	// 	if err != nil {
-	// 		c.JSON(404, gin.H{
-	// 			"message": "card not found",
-	// 		})
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
+	R.GET("/customize/:card-id", func(c *gin.Context) {
+		cardID := c.Param("card-id")
+		cardDetails, err := db.GetCardDetails(cardID)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"message": "card not found",
+			})
+			fmt.Println(err)
+			return
+		}
 
-	// 	conf, err := design.ReadDesignConfig()
-	// 	if err != nil {
-	// 		c.JSON(500, gin.H{
-	// 			"message": "failed to load customization options",
-	// 		})
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
-	// 	c.HTML(200, "", templ.CustomizeCard(cardDetails, conf))
-	// })
+		conf, err := design.ReadDesignConfig()
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": "failed to load customization options",
+			})
+			fmt.Println(err)
+			return
+		}
+		c.HTML(200, "", templ.CustomizeCard(cardDetails, conf))
+	})
 
 	// R.GET("/new", func(c *gin.Context) {
 	// 	c.HTML(200, "newCard.html", gin.H{})
-	// })
-
-	// R.GET("/hello", func(c *gin.Context) {
-	// 	c.HTML(200, "", templ.Card(model.CardDetails{
-	// 		Name: "Yael's Fan Club",
-	// 		Design: design.CardDesign{
-	// 			Color:          "citron",
-	// 			Font:           "font-pacifico",
-	// 			Pattern:        "bubbles.svg",
-	// 			Texture:        "noise-dark.png",
-	// 			TextureOpacity: 30,
-	// 		},
-	// 	}, false))
 	// })
 
 	R.Static("/static", "./static")

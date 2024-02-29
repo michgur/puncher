@@ -54,7 +54,7 @@ func AllCards(cards []model.CardDetails) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body class=\"bg-gray-100 flex flex-col h-dvh w-dvw text-gray-950 overflow-x-hidden\"><header class=\"flex p-4 gap-10\"><h1 class=\"basis-auto grow-0 shrink-0 text-3xl text-black font-semibold\">All Cards</h1><div class=\"flex-1 min-w-0 px-2 py-1 rounded-md bg-gray-300 flex gap-1\"><svg class=\"w-4 shrink-0 text-gray-600\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z\" fill=\"CurrentColor\"></path></svg> <input class=\"flex-1 bg-transparent outline-none placeholder:text-gray-800\" type=\"text\" placeholder=\"Search Cards\"></div></header><div class=\"overflow-auto flex-1 flex flex-col gap-4 p-4 pt-0.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -63,7 +63,7 @@ func AllCards(cards []model.CardDetails) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div onclick=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -72,7 +72,7 @@ func AllCards(cards []model.CardDetails) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 3)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -80,12 +80,12 @@ func AllCards(cards []model.CardDetails) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 4)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 5)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div id=\"otp-sheet\"><h1>Punch a Slot</h1><p>Make a purchase at the business and ask the cashier for a puncher code</p><otp-input digits=\"4\"></otp-input></div><bottom-sheet content=\"#otp-sheet\"></bottom-sheet></body>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

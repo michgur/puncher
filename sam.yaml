@@ -24,4 +24,4 @@ Outputs:
     Description: URL for application
     Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/puncher'
     Export:
-      Name: PuncherApi
+      Name: PuncherApi  

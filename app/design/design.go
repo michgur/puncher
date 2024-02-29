@@ -24,9 +24,8 @@ const (
 )
 
 const (
-	NoiseLight Texture = "noise-light.png"
-	NoiseDark  Texture = "noise-dark.png"
-	NoTexture  Texture = ""
+	Noise     Texture = "noise.png"
+	NoTexture Texture = ""
 )
 
 const (

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -18,7 +19,9 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		ginLambda = ginadapter.New(app.R)
 	}
 
-	return ginLambda.ProxyWithContext(context, request)
+	response, err := ginLambda.ProxyWithContext(context, request)
+	fmt.Println("Response: ", response)
+	return response, err
 }
 
 func main() {
