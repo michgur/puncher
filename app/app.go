@@ -160,9 +160,9 @@ func init() {
 		c.HTML(200, "", templ.AllCards(cards))
 	})
 
-	// R.GET("/enroll", func(c *gin.Context) {
-	// 	c.HTML(200, "enroll.html", gin.H{})
-	// })
+	R.GET("/enroll", func(c *gin.Context) {
+		c.HTML(200, "enroll.html", gin.H{})
+	})
 
 	R.POST("/customize/:card-id", func(c *gin.Context) {
 		cardID := c.Param("card-id")
@@ -221,9 +221,9 @@ func init() {
 		c.HTML(200, "", templ.CustomizeCard(cardDetails, conf))
 	})
 
-	// R.GET("/new", func(c *gin.Context) {
-	// 	c.HTML(200, "newCard.html", gin.H{})
-	// })
+	R.GET("/new", func(c *gin.Context) {
+		c.HTML(200, "newCard.html", gin.H{})
+	})
 
 	R.Static("/static", "./static")
 }
